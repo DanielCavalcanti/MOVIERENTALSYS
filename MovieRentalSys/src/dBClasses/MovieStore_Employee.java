@@ -17,7 +17,8 @@ public class MovieStore_Employee {
 	private String fullname;
 	private double salary;
 	private double managerid;
-	private ArrayList<MovieStore_Employee> managed;
+	private ArrayList<MovieStore_Employee> managed; //list of emps mananaged by current instance 
+	private ArrayList<MovieRental> sales;
 	
 	/**
 	 * The constructor initializes all attributes of an MovieStore_Employee object 
@@ -31,6 +32,7 @@ public class MovieStore_Employee {
 		this.salary = salary;
 		this.managerid = managerid;
 		this.managed = new ArrayList<>();
+		this.sales = new ArrayList<>();
 	}
 
 	/* (non-Javadoc)
@@ -82,6 +84,24 @@ public class MovieStore_Employee {
 	public ArrayList<MovieStore_Employee> getManaged() {
 		return managed;
 	}
+
+	/**
+	 * getSales returns the list of rents the employee has completed
+	 * @return the sales - list of MovieRental objects
+	 */
+	public ArrayList<MovieRental> getSales() {
+		return sales;
+	}
+	
+	/**
+	 * addSales adds a new rental object to the list of rentals completed by the employee
+	 * @param mr - a MovieRental object
+	 */
+	public void addSales(MovieRental mr){
+		this.sales.add(mr);
+	}
+	
+	
 	
 	
 	

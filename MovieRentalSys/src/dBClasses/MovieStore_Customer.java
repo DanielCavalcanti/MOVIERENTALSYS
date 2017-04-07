@@ -3,6 +3,8 @@
  */
 package dBClasses;
 
+import java.util.ArrayList;
+
 /**
  * The MovieStore_Customer encapsulates the properties and attributes 
  * of an customer in a movie rental database
@@ -17,6 +19,7 @@ public class MovieStore_Customer {
 	private String address;
 	private String phone;
 	private String email;
+	private ArrayList<MovieRental> rentals;
 	
 	/**
 	 * The constructor initializes all attributes of an MovieStore_Customer object 
@@ -32,6 +35,7 @@ public class MovieStore_Customer {
 		this.address = address;
 		this.phone = phone;
 		this.email = email;
+		this.rentals = new ArrayList<>();
 	}
 
 	/**
@@ -72,6 +76,24 @@ public class MovieStore_Customer {
 	 */
 	public String getEmail() {
 		return email;
+	}
+	
+	
+
+	/**
+	 * getRentals returns the list of rentals made by the customer
+	 * @return the rentals - list of MovieRental objects
+	 */
+	public ArrayList<MovieRental> getRentals() {
+		return rentals;
+	}
+	
+	/**
+	 * addRental adds a new rental to the list of rentals made by the customer
+	 * @param mr - a MovieRental object
+	 */
+	public void addRental(MovieRental mr){
+		this.rentals.add(mr);
 	}
 
 	/* (non-Javadoc)

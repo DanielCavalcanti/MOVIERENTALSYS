@@ -12,21 +12,21 @@ package dBClasses;
  */
 public class MovieStore_Customer {
 	
-	private int custid;
+	private double custid;
 	private String fullname;
 	private String address;
 	private String phone;
 	private String email;
 	
 	/**
-	 * The constructor initializes all attributes of an customer object 
+	 * The constructor initializes all attributes of an MovieStore_Customer object 
 	 * @param custid - id of the customer
 	 * @param fullname - the first and last name of the customer
 	 * @param address - the address of the customer
 	 * @param phone - the phone number of the customer
 	 * @param email - the email of the customer
 	 */
-	public MovieStore_Customer(int custid, String fullname, String address, String phone, String email) {
+	public MovieStore_Customer(double custid, String fullname, String address, String phone, String email) {
 		this.custid = custid;
 		this.fullname = fullname;
 		this.address = address;
@@ -36,9 +36,9 @@ public class MovieStore_Customer {
 
 	/**
 	 * getCustid will return the id of the customer
-	 * @return the custid - int value
+	 * @return the custid - double value
 	 */
-	public int getCustid() {
+	public double getCustid() {
 		return custid;
 	}
 

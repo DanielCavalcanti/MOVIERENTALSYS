@@ -15,10 +15,10 @@ public class Actor {
 	
 	
 
-	private int actorid;
+	private double actorid;
 	private String name;
 	private String gender;
-	private int age;
+	private double age;
 	private ArrayList<Movie> movies;
 	
 	/**
@@ -28,11 +28,12 @@ public class Actor {
 	 * @param gender - string value of the gender of the actor
 	 * @param age - int value of the age of the actor
 	 */
-	public Actor(int actorid, String name, String gender, int age) {
+	public Actor(double actorid, String name, String gender, double age) {
 		this.actorid = actorid;
 		this.name = name;
 		this.gender = gender;
 		this.age = age;
+		this.movies = new ArrayList<>();
 	}
 	
 	/**
@@ -62,9 +63,9 @@ public class Actor {
 
 	/**
 	 * getActorid returns the id of the actor
-	 * @return int value
+	 * @return double value
 	 */
-	public int getActorid() {
+	public double getActorid() {
 		return actorid;
 	}
 	
@@ -86,9 +87,9 @@ public class Actor {
 	
 	/**
 	 * getAge returns the age of the actor
-	 * @return - int value
+	 * @return - double value
 	 */
-	public int getAge() {
+	public double getAge() {
 		return age;
 	}
 	

@@ -16,27 +16,28 @@ import java.util.ArrayList;
 public class Movie {
 	
 	//column names
-	private int movieid;
+	private double movieid;
 	private String title;
 	private String category;
-	private int qty;
-	private int rating;
+	private double qty;
+	private double rating;
 	private ArrayList<Actor> actorsInMovie;
 	
 	/**
-	 * Contructor initializes all attributes of a movie object
-	 * @param movieid - int value representing the id of the movie in the database
+	 * Constructor initializes all attributes of a movie object
+	 * @param movieid - double value representing the id of the movie in the database
 	 * @param title - the title of the movie
 	 * @param category - the category of the movie
 	 * @param qty - number of copies available of the movie in the database
 	 * @param rating - the rating of the movie
 	 */
-	public Movie(int movieid,String title,String category,int qty,int rating){
+	public Movie(double movieid,String title,String category,double qty,double rating){
 		this.movieid = movieid;
 		this.title = title;
 		this.category = category;
 		this.qty = qty;
 		this.rating = rating;
+		this.actorsInMovie = new ArrayList<>();
 	}
 
 	/**
@@ -57,9 +58,9 @@ public class Movie {
 
 	/**
 	 * getMovieid returns the id value of the movie
-	 * @return int value
+	 * @return double value
 	 */
-	public int getMovieid() {
+	public double getMovieid() {
 		return movieid;
 	}
 
@@ -81,17 +82,17 @@ public class Movie {
 	
 	/**
 	 * getQty returns the number of copies available of the movie in the database
-	 * @return int value
+	 * @return double value
 	 */
-	public int getQty() {
+	public double getQty() {
 		return qty;
 	}
 	
 	/**
 	 * getRating returns the rating of the movie
-	 * @return int value
+	 * @return double value
 	 */
-	public int getRating() {
+	public double getRating() {
 		return rating;
 	}
 	

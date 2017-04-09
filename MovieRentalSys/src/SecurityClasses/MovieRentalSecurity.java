@@ -31,40 +31,74 @@ import javax.crypto.spec.PBEKeySpec;
 public class MovieRentalSecurity {
 	
 		/**
-		 * newUser method takes a username and password and creates an account for that user
-		 * with an account type based on the input type passed to the method
+		 * newUser method takes a username and password and all other user info and creates 
+		 * an account for that user with an account type based on the input type passed 
+		 * to the method.
 		 * @param username - the username of the user
 		 * @param password - the password of the user
 		 * @param type - the account type for the user
 		 * @throws SQLException when an SQL error has occurred while adding a new user
 		 * @throws Exception when any other error has occurred while adding a new user
 		 */
-		public void newUser(String username, String password, String type) throws SQLException, Exception{
+		public void newUser(String username, String password, String type,
+							String name, String address, String phone, String email ) throws SQLException, Exception{
 			
 			//get salt for password
 			String salt = Utilities.getSalt();
 			//get hash for password and salt
 			byte[] hash = Utilities.hash(password,salt);
-			
+			double maxID = 0;
 			Connection con = null;
 			try{
 				con = Utilities.getConnection();
 				con.setAutoCommit(false);
-				
-				String query = "INSERT INTO users VALUES(?,?,?,?)";
-				PreparedStatement stmt = con.prepareStatement(query);
-				stmt.setString(1, username);
-				stmt.setString(2, type);
-				stmt.setString(3, salt);
-				stmt.setBytes(4, hash);
-				stmt.executeUpdate();
+
+				if(type.equalsIgnoreCase("Customer")){
+					//the following will get the max customer id existing in the database
+					String maxQuery = "SELECT MAX(CUSTOMER_ID) FROM moviestore_customer";
+					PreparedStatement maxstmt = con.prepareStatement(maxQuery);
+					ResultSet rs = maxstmt.executeQuery();	
+					while(rs.next()){
+						maxID = rs.getDouble("MAX(CUSTOMER_ID)");
+					}
+					maxID++;
+
+					//the following will check if the user already exists in the customer table
+					String nameQuery = "SELECT * FROM moviestore_customer WHERE"
+										+ " fullname = ?";
+					PreparedStatement namestmt = con.prepareStatement(nameQuery);
+					namestmt.setString(1, name);
+					ResultSet result = namestmt.executeQuery();
+					if(result.next()){
+						throw new SQLException("User already exists");
+					}
+	
+					//the following will insert a new entry in the moviestore_customer table
+					String query1 = "INSERT INTO moviestore_customer VALUES(?,?,?,?,?)";
+					PreparedStatement stmt1 = con.prepareStatement(query1);
+					stmt1.setDouble(1, maxID);
+					stmt1.setString(2, name);
+					stmt1.setString(3, address);
+					stmt1.setString(4, phone);
+					stmt1.setString(5, email);
+					stmt1.executeUpdate();
+				}
+
+				//the following will insert a new entry in the users table
+				String query2 = "INSERT INTO users VALUES(?,?,?,?)";
+				PreparedStatement stmt2 = con.prepareStatement(query2);
+				stmt2.setString(1, username);
+				stmt2.setString(2, type);
+				stmt2.setString(3, salt);
+				stmt2.setBytes(4, hash);
+				stmt2.executeUpdate();
 				System.out.println("New user " + username + " added successfully");
 				
 				con.commit();			
 			}catch(SQLException e){
 				if(con!=null)
 					con.rollback();
-				System.out.println("An error occured while adding a new user");
+				System.out.println("An error occured while adding a new user. \n" + e.getMessage());
 			}finally{
 				if(con!=null){
 					con.close();
@@ -75,9 +109,10 @@ public class MovieRentalSecurity {
 		
 		/**
 		 * The overloaded newUser method will prompts the user to input
-		 * a username and password, and creates an account for that user
+		 * a username and password and all other user info, and creates an account for that user
+		 * and an entry in the moviestore customer or employee table
 		 * based on the input type account.
-		 * @param type
+		 * @param type - the account type
 		 * @throws SQLException when an SQL error has occurred while adding a new user
 		 * @throws Exception when any other error has occurred while adding a new user
 		 */
@@ -85,84 +120,16 @@ public class MovieRentalSecurity {
 			Scanner scan = null;
 			String username = "";
 			String password="";
-			try{
-				scan = new Scanner(System.in);
-				System.out.println("Please enter your username");
-				username = scan.nextLine();
-				System.out.println("Please enter your password");
-				password = scan.nextLine();
-			}catch(Exception e){
-				System.out.println(e.getMessage());
-			}
-			newUser(username,password, type);
-			newCustomer();
-		}
-		
-		
-		
-		/**
-		 * newCustomer method will take a name, an address, a phone and an email
-		 * to add an entry in the moviestore_customer table
-		 * @param name - the fullname of the user
-		 * @param address - the address of the user
-		 * @param phone - the phone number of the user
-		 * @param email - the email address of the user
-		 * @throws SQLException - when an SQL error has occurred while adding a new customer
-		 * @throws Exception - when any other error has occurred while adding a new customer
-		 */
-		private void newCustomer(String name, String address, String phone, String email) 
-				throws SQLException, Exception{
-
-			Connection con = null;
-			double maxID = 0;
-			try{
-				con = Utilities.getConnection();
-				con.setAutoCommit(false);
-								
-				//the following will get the max customer id existing in the database
-				String maxQuery = "SELECT MAX(customer_ID) FROM moviestore_customer";
-				PreparedStatement maxstmt = con.prepareStatement(maxQuery);
-				ResultSet rs = maxstmt.executeQuery();
-				while(rs.next()){
-					maxID = rs.getDouble("customer_ID");
-				}
-				
-				//the following will insert a new entry in the moviestore_customer table
-				String query = "INSERT INTO moviestore_customer VALUES(?,?,?,?)";
-				PreparedStatement stmt = con.prepareStatement(query);
-				stmt.setDouble(1, maxID+1);
-				stmt.setString(2, name);
-				stmt.setString(3, address);
-				stmt.setString(4, phone);
-				stmt.setString(5, email);
-				stmt.executeUpdate();
-				con.commit();			
-			}catch(SQLException e){
-				if(con!=null)
-					con.rollback();
-			}
-			finally{
-				if(con!=null){
-					con.close();
-				}
-			}	
-		}
-
-		
-		/**
-		 * The overloaded newCustomer method will prompt the user for a name, an address,
-		 * a phone and an email to add an entry in the moviestore_customer table
-		 * @throws SQLException when an SQL error has occurred while adding a new customer
-		 * @throws Exception when any other error has occurred while adding a new customer
-		 */
-		private void newCustomer() throws SQLException, Exception{
-			Scanner scan = null;
 			String name = "";
 			String address="";
 			String phone = "";
 			String email = "";
 			try{
 				scan = new Scanner(System.in);
+				System.out.println("Please enter your username");
+				username = scan.nextLine();
+				System.out.println("Please enter your password");
+				password = scan.nextLine();
 				System.out.println("Please enter your fullname");
 				name = scan.nextLine();
 				System.out.println("Please enter your address");
@@ -174,10 +141,10 @@ public class MovieRentalSecurity {
 			}catch(Exception e){
 				System.out.println(e.getMessage());
 			}
-			newCustomer(name,address, phone, email);
+			newUser(username,password,type,name,address,phone,email);			
 		}
 		
-		
+	
 		
 		
 		/**

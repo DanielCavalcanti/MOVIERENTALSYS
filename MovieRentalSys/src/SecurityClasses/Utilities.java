@@ -40,8 +40,9 @@ public class Utilities {
 	public static Connection getConnection() throws SQLException, Exception{
 		config();
 		Class.forName("oracle.jdbc.driver.OracleDriver");
+		//jdbc:oracle:thin:@198.168.52.73:1521:orad11g
 		Connection connection = DriverManager.getConnection
-				("jdbc:oracle:thin:@198.168.52.73:1521:orad11g", user, pass);
+				("jdbc:oracle:thin:@localhost:1521:xe", user, pass);
 		return connection;			
 	}
 	
@@ -101,7 +102,7 @@ public class Utilities {
 			user = list.get(0);
 			pass = list.get(1);
 		}catch(Exception e){
-			System.out.println("Error reading file");
+			System.out.println(e.getMessage());
 		}finally{
 			try {
 				if (br != null)
